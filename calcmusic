@@ -1,0 +1,113 @@
+# BPM: 162
+# Key: G Minor
+# Color Key: Pink = Symbols/Opts, Blue = Numbers, Orange = Do/End, Grey = Comments
+use_bpm 162
+
+# Master FX for a more raw sound
+with_fx :compressor, threshold: 0.8, slope_above: 0.1 do
+  
+  # MELODY: Guitar Riff
+  live_loop :guitar do
+    use_synth :pluck
+    use_synth_defaults coef: 0.3, amp: 0.8, pan: rrand(-0.1, 0.1), release: 2
+    
+    # G Minor that is fast
+    
+    with_fx :reverb, room: 0.3 do
+      with_fx :lpf, cutoff: 110 do
+        # Bar 1
+        play_pattern_timed [:g3, :d4, :bb4, :d4, :g4, :d4, :bb4, :d4], [0.5]
+        
+        # Variation on the chord
+        play_pattern_timed [:eb3, :bb3, :g4, :bb3, :eb4, :bb3, :g4, :bb3], [0.5]
+      end
+    end
+  end
+  
+  # Tension Strings with a higher pitched violin synth in background
+  live_loop :strings do
+    use_synth :blade
+    use_synth_defaults attack: 0.5, release: 2, amp: 0.4, vibrato_rate: 6
+    
+    play :g5, sustain: 4
+    sleep 4
+    play :eb5, sustain: 4
+    sleep 4
+  end
+  
+  # Aggressive 808 that have rapid hits and slides
+  live_loop :bass_808 do
+    use_synth :subpulse
+    use_synth_defaults attack: 0.01, release: 0.5, cutoff: 95, amp: 2.2
+    
+    with_fx :distortion, distort: 0.6 do
+      # Bar 1 (G)
+      play :g1
+      sleep 2.5
+      play :g1
+      sleep 0.5
+      play :g1
+      sleep 1.0
+      
+      # Eb - Tension sound
+      play :eb1
+      sleep 2.5
+      
+      # The Slide
+      play :eb1
+      sleep 0.5
+      play :eb1 + 12, amp: 1.5, release: 0.3 # Slide up octave
+      sleep 1.0
+    end
+  end
+  
+  # Drums
+  live_loop :drums do
+    # Kick: Follows bass, very punchy
+    sample :bd_tek, amp: 3, cutoff: 110
+    sleep 2.5
+    sample :bd_tek, amp: 3, cutoff: 110
+    sleep 0.5
+    sample :bd_tek, amp: 3, cutoff: 110
+    sleep 1.0
+  end
+  
+  live_loop :snare_clap do
+    sync :drums
+    sleep 1
+    # A sharp snare layered with clap
+    sample :sn_dolf, amp: 2, rate: 1.5
+    sample :cp_stutter, amp: 1.0
+    sleep 1
+  end
+  
+  # HATS: Rapid and rolling hats
+  live_loop :hats do
+    sync :drums
+    use_sample_defaults amp: 1.2, release: 0.1
+    
+    # 4 beats
+    4.times do
+      if one_in(3)
+        # Fast triplet roll
+        6.times do
+          sample :drum_cymbal_closed, rate: 1.6, pan: rrand(-0.2, 0.2)
+          sleep 1.0/6
+        end
+      else
+        # 8th notes
+        2.times do
+          sample :drum_cymbal_closed, rate: 1.5
+          sleep 0.25
+        end
+      end
+    end
+  end
+  
+  # Occasional hit to signal loop reset
+  live_loop :fx do
+    sleep 16
+    sample :perc_impact2, amp: 1.5, rate: 1.2 if one_in(2)
+  end
+  
+end
