@@ -1,6 +1,6 @@
 # BPM: 162
 # Key: G Minor
-# Color Key: Pink = Symbols/Objects/Instrument, Blue = Numbers, Orange = Do/End, Grey = Comments
+# Color Key: Pink = Symbols/Objects/Instrument, Blue = Numbers/Constant k in Calc Terms, Orange = Do/End, Grey = Comments
 use_bpm 162
 
 # Master FX for a more raw sound
